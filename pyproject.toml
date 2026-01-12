@@ -4,18 +4,32 @@ version = "0.1.0"
 description = "Konzistence MonRaS - analýza dat z databáze"
 requires-python = ">=3.11"
 dependencies = [
+    # Data processing
     "pandas>=2.0.0",
     "openpyxl>=3.1.0",
+    "numpy>=1.24.0",
+    "scipy>=1.11.0",
+    
+    # Dash framework
+    "dash>=2.14.0",
+    "dash-bootstrap-components>=1.5.0",
+    "dash-ag-grid>=31.0.0",
+    
+    # Visualization
+    "altair>=5.2.0",
+    "dash-vega-components>=0.5.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
     "ipython>=8.0.0",
+    "watchdog>=3.0.0",
 ]
 
 [tool.uv]
 dev-dependencies = [
     "pytest>=7.0.0",
     "ipython>=8.0.0",
+    "watchdog>=3.0.0",
 ]

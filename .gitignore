@@ -2,6 +2,14 @@
 data/
 old/
 
+# SQLite databases
+*.sqlite
+*.db
+
+# Excel data files
+*.xlsx
+*.xls
+
 # Python
 __pycache__/
 *.py[cod]

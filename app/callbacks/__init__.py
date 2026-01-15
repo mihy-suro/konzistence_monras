@@ -1,20 +1,21 @@
 """
-Callbacks modul - interaktivita aplikace.
+Callbacks package for MRS Viewer.
 
-Každý modul obsahuje callbacks (@app.callback dekorátory) pro specifickou
-funkcionalitu. Callbacks se registrují automaticky při importu modulu.
-
-DŮLEŽITÉ: Callbacks importují `app` ze `server.py`, nikdy z `main.py`!
-
-Moduly:
-    - upload_callbacks: Zpracování nahraných souborů
-    - filter_callbacks: Filtrování dat podle uživatelských kritérií
-    - chart_callbacks: Crossfiltering a aktualizace grafů
-    - outlier_callbacks: Detekce a zobrazení outlierů
+Modular callback structure:
+- filters: Filter dropdown updates
+- selection: Graph selection handling
+- reference: Reference period line positioning
+- main_content: Main scatter plot and table rendering
 """
+from .filters import register_filter_callbacks
+from .selection import register_selection_callbacks
+from .reference import register_reference_callbacks
+from .main_content import register_main_callbacks
 
-# Import modulů pro registraci callbacks
-from . import upload_callbacks  # noqa: F401
-from . import filter_callbacks  # noqa: F401
-from . import chart_callbacks  # noqa: F401
-from . import outlier_callbacks  # noqa: F401
+
+def register_callbacks(app):
+    """Register all callbacks with the Dash app."""
+    register_filter_callbacks(app)
+    register_selection_callbacks(app)
+    register_reference_callbacks(app)
+    register_main_callbacks(app)

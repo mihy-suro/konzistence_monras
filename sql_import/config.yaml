@@ -1,0 +1,151 @@
+input:
+  roots:
+    - "../data/Polozky_PR"
+    - "../data/Polozky_ZP"
+  glob: "*.xlsx"
+  recursive: false
+
+output:
+  sqlite_path: "../monras_import.sqlite"
+  if_exists: "replace"   # replace | append | fail
+
+excel:
+  max_header_scan_rows: 80
+  header_match:
+    min_hits: 5
+    min_ratio: 0.10
+
+naming:
+  drop_years: true
+  drop_trailing_version_suffix: true
+  keep_max_words: 4
+  max_len: 48
+
+sqlite:
+  pragmas:
+    journal_mode: "WAL"
+    synchronous: "NORMAL"
+    temp_store: "MEMORY"
+  chunk_rows: 5000
+  create_indexes: true
+  indexes:
+    - ["id_zppr_vzorek"]
+    - ["id_om"]
+    - ["datum_odberu_utc"]  # sjednocený název
+    - ["datum_mereni_utc"]  # sjednocený název
+    - ["nuklid"]
+    - ["hodnota"]
+
+# ---- Typy a parsování datumů ----
+schema:
+  # aliasy pro zkrácení názvů sloupců (klíč = originální text v XLSX, hodnoty = cílový název ve SQLite)
+  # DŮLEŽITÉ: Různé Excel soubory mají různé názvy sloupců, proto potřebujeme mapovat všechny varianty
+  column_aliases:
+    # Identifikátory
+    "ID ZPPR vzorek": "id_zppr_vzorek"
+    "ID_OM": "id_om"
+    "Odběrové_místo": "odber_misto"
+    "Odběrové místo": "odber_misto"
+    
+    # Geografické údaje
+    "Zeměpisná délka [°]": "lon_deg"
+    "Zeměpisná šířka [°]": "lat_deg"
+    "Nadmořská výška [m]": "alt_m"
+    
+    # DATUMOVÉ SLOUPCE - sjednocení variant na jednotný formát
+    # Datum odběru - různé varianty -> datum_odberu_utc
+    "Datum a čas odběru začátek [UTC]": "datum_odberu_utc"
+    "Datum odběru [UTC]": "datum_odberu_utc"
+    "Datum_odběru [UTC]": "datum_odberu_utc"
+    
+    # Konec odběru
+    "Datum a čas odběru konec [UTC]": "konec_odberu_utc"
+    "Konec odběru [UTC]": "konec_odberu_utc"
+    
+    # Datum měření
+    "Datum a čas měření [UTC]": "datum_mereni_utc"
+    "Datum měření [UTC]": "datum_mereni_utc"
+    
+    # Referenční datum
+    "Referenční datum a čas [UTC]": "referencni_datum_utc"
+    "Referenční datum [UTC]": "referencni_datum_utc"
+    "Referenční datum a čas [místní čas]": "referencni_datum_mistni_cas"
+    "Referenční datum [místní čas]": "referencni_datum_mistni_cas"
+    
+    # Datum příjmu
+    "Datum a čas příjmu [UTC]": "datum_prijmu_utc"
+    "Datum a čas příjmu [místní čas]": "datum_prijmu_mistni_cas"
+    
+    # Datum vytvoření/změny záznamu
+    "Datum vytvoření [místní čas]": "datum_vytvoreni_mistni_cas"
+    "Datum změny [místní čas]": "datum_zmeny_mistni_cas"
+    "Datum a čas vytvoření [místní čas]": "datum_vytvoreni_mistni_cas"
+    "Datum a čas změny [místní čas]": "datum_zmeny_mistni_cas"
+    
+    # Datum zřízení/zrušení OM
+    "Datum zřízení": "datum_zrizeni"
+    "Datum zrušení": "datum_zruseni"
+    
+    # Hodnoty měření
+    "Množství": "mnozstvi"
+    "Jednotka množství": "jednotka_mnozstvi"
+    "Nuklid": "nuklid"
+    "Hodnota": "hodnota"
+    "Hodnota_cista": "hodnota_cista"
+    "Nejistota": "nejistota"
+    "Jednotka": "jednotka"
+    "Poznámka admin": "poznamka_admin"
+    
+    # MVA indikátory
+    "Pod MVA": "pod_mva"
+    "Dodaná hodnota MVA": "dodana_hodnota_mva"
+
+  # datetime sloupce lze definovat:
+  # 1) regexem přes už znormalizované názvy sloupců (po zkrácení)
+  datetime:
+    detect_regex: "(datum|cas)"
+    utc_regex: "(_utc\\b|\\butc\\b)"
+    store_as: "unix_ms"  # unix_ms = INTEGER (milisekundy od 1970) | iso_text = TEXT
+    iso_format_naive: "%Y-%m-%dT%H:%M:%S"
+    iso_format_utc: "%Y-%m-%dT%H:%M:%SZ"
+
+  # Explicitní datové typy pro sloupce (po zkrácení názvů)
+  # Sloupce neuvedené zde budou mít fallback_type (TEXT)
+  column_types:
+    integer:
+      - id_zppr_vzorek
+      - id_om
+    
+    real:
+      - lon_deg
+      - lat_deg
+      - alt_m
+      - mnozstvi
+      - hodnota
+      - hodnota_cista
+      - nejistota
+    
+    text:
+      - odber_misto
+      - jednotka_mnozstvi
+      - nuklid
+      - jednotka
+      - poznamka_admin
+    
+    # datetime sloupce - ukládají se jako unix_ms (INTEGER)
+    # Jsou zpracovány automaticky podle datetime.detect_regex, 
+    # ale explicitně je uvádíme pro přehlednost
+    datetime:
+      - datum_odberu_utc
+      - konec_odberu_utc
+      - datum_mereni_utc
+      - referencni_datum_utc
+      - datum_prijmu_utc
+      - datum_zrizeni
+      - datum_zruseni
+  
+  # Fallback typ pro sloupce neuvedené v column_types
+  fallback_type: "TEXT"
+
+logging:
+  level: "INFO"

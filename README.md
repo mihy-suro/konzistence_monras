@@ -20,7 +20,7 @@ MRS Viewer je webová aplikace postavená na frameworku [Dash](https://dash.plot
 
 ### Screenshot
 
-![MRS Viewer Screenshot](assets/screenshot.png)
+![MRS Viewer Screenshot](app/assets/screenshot.PNG)
 
 ---
 

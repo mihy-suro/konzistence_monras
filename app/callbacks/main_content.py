@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from dash import Input, Output, State, callback_context
 
 from .. import ids
+from ..config import config
 from ..data.db import get_plot_data
 from ..stats import calculate_tolerance_intervals
 
@@ -15,7 +16,12 @@ def register_main_callbacks(app):
     
     # Y-axis zoom button callback
     @app.callback(
-        Output(ids.STORE_Y_ZOOM, "data"),
+        [
+            Output(ids.STORE_Y_ZOOM, "data"),
+            Output(ids.BTN_ZOOM_2TI, "active"),
+            Output(ids.BTN_ZOOM_1TI, "active"),
+            Output(ids.BTN_ZOOM_FULL, "active"),
+        ],
         [
             Input(ids.BTN_ZOOM_2TI, "n_clicks"),
             Input(ids.BTN_ZOOM_1TI, "n_clicks"),
@@ -27,16 +33,36 @@ def register_main_callbacks(app):
         """Update Y zoom mode based on button clicks."""
         ctx = callback_context
         if not ctx.triggered:
-            return "2ti"
+            return "2ti", True, False, False
         
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
         if button_id == ids.BTN_ZOOM_2TI:
-            return "2ti"
+            return "2ti", True, False, False
         elif button_id == ids.BTN_ZOOM_1TI:
-            return "1ti"
+            return "1ti", False, True, False
         elif button_id == ids.BTN_ZOOM_FULL:
-            return "full"
-        return "2ti"
+            return "full", False, False, True
+        return "2ti", True, False, False
+    
+    # MVA toggle callback
+    @app.callback(
+        [
+            Output(ids.STORE_SHOW_MVA, "data"),
+            Output(ids.BTN_SHOW_MVA, "active"),
+            Output(ids.BTN_SHOW_MVA, "children"),
+            Output(ids.BTN_SHOW_MVA, "color"),
+        ],
+        Input(ids.BTN_SHOW_MVA, "n_clicks"),
+        State(ids.STORE_SHOW_MVA, "data"),
+        prevent_initial_call=True,
+    )
+    def toggle_show_mva(n_clicks, current_state):
+        """Toggle MVA visibility."""
+        new_state = not current_state if current_state is not None else False
+        if new_state:
+            return new_state, True, "MVA: Zobrazeno", "success"
+        else:
+            return new_state, False, "MVA: Skryto", "secondary"
     
     @app.callback(
         [
@@ -44,6 +70,7 @@ def register_main_callbacks(app):
             Output(ids.AGGRID_TABLE, "rowData"),
             Output(ids.INFO_TEXT, "children"),
             Output(ids.TI_INFO, "children"),
+            Output(ids.TABLE_STATS, "children"),
         ],
         [
             Input(ids.DROPDOWN_DATASET, "value"),
@@ -54,6 +81,7 @@ def register_main_callbacks(app):
             Input(ids.SLIDER_DATA_RANGE, "value"),
             Input(ids.SLIDER_REF_PERIOD, "value"),
             Input(ids.STORE_Y_ZOOM, "data"),
+            Input(ids.STORE_SHOW_MVA, "data"),
         ],
         State(ids.STORE_DATE_RANGE, "data"),
         prevent_initial_call=False,
@@ -67,6 +95,7 @@ def register_main_callbacks(app):
         data_range_slider: Optional[list],
         ref_period_slider: Optional[list],
         y_zoom_mode: Optional[str],
+        show_mva: Optional[bool],
         date_range_store: Optional[dict],
     ):
         """
@@ -78,6 +107,10 @@ def register_main_callbacks(app):
         - Renders scatter plot with selection highlighting, reference rectangle, and MVA markers
         - Renders table with selected/all data
         """
+        # Default show_mva to True if not set
+        if show_mva is None:
+            show_mva = True
+            
         # Empty state
         empty_fig = go.Figure()
         empty_fig.update_layout(
@@ -88,12 +121,12 @@ def register_main_callbacks(app):
         
         if not dataset:
             empty_fig.update_layout(title="Vyberte dataset")
-            return empty_fig, [], "Vyberte dataset pro zobrazení dat.", ""
+            return empty_fig, [], "Vyberte dataset pro zobrazení dat.", "", ""
         
         # Require nuklid selection for large datasets - prevents loading all data
         if not nuklid:
             empty_fig.update_layout(title="Vyberte nuklid pro zobrazení dat")
-            return empty_fig, [], "Vyberte nuklid pro načtení dat.", ""
+            return empty_fig, [], "Vyberte nuklid pro načtení dat.", "", ""
         
         # Build filters dict (multi-select values are lists)
         filters = {}
@@ -109,11 +142,18 @@ def register_main_callbacks(app):
             df = get_plot_data(dataset, filters=filters, max_points=50000)
         except Exception as e:
             print(f"Error loading data: {e}")
-            return empty_fig, [], f"Chyba při načítání dat: {e}", ""
+            return empty_fig, [], f"Chyba při načítání dat: {e}", "", ""
         
         if df.empty:
             empty_fig.update_layout(title="Žádná data pro vybrané filtry")
-            return empty_fig, [], "Žádná data odpovídající filtrům.", ""
+            return empty_fig, [], "Žádná data odpovídající filtrům.", "", ""
+        
+        # Filter out MVA if show_mva is False
+        if not show_mva and "pod_mva" in df.columns:
+            df = df[df["pod_mva"] != 1]
+            if df.empty:
+                empty_fig.update_layout(title="Žádná data (pouze MVA)")
+                return empty_fig, [], "Všechna data jsou pod MVA.", "", ""
         
         total_points_before_filter = len(df)
         selected_set = set(selected_keys) if selected_keys else set()
@@ -160,7 +200,7 @@ def register_main_callbacks(app):
         
         if df.empty:
             empty_fig.update_layout(title="Žádná data ve vybraném rozsahu")
-            return empty_fig, [], "Žádná data ve vybraném časovém rozsahu.", ""
+            return empty_fig, [], "Žádná data ve vybraném časovém rozsahu.", "", ""
         
         df = df.reset_index(drop=True)
         total_points = len(df)
@@ -172,6 +212,10 @@ def register_main_callbacks(app):
         if "datum" in df.columns and ref_line_start is not None and ref_line_end is not None:
             # Filter reference period
             df_ref = df[(df["datum"] >= ref_line_start) & (df["datum"] <= ref_line_end)]
+            
+            # Exclude MVA values from TI calculation (always, regardless of show_mva setting)
+            if "pod_mva" in df_ref.columns:
+                df_ref = df_ref[df_ref["pod_mva"] != 1]
             
             if len(df_ref) >= 10 and "hodnota" in df_ref.columns:
                 ref_values = df_ref["hodnota"].dropna().values
@@ -262,6 +306,14 @@ def register_main_callbacks(app):
             uirevision=ui_key,
             margin=dict(l=50, r=10, t=40 if show_legend else 10, b=30),
             shapes=ref_shapes,
+            # Prevent automatic dimming of unselected points
+            newselection=dict(mode="immediate"),
+        )
+        
+        # Apply unselected opacity to all traces to prevent dimming
+        fig.update_traces(
+            unselected=dict(marker=dict(opacity=_get_opacity_normal())),
+            selected=dict(marker=dict(opacity=_get_opacity_normal())),
         )
         
         # TI horizontal lines
@@ -280,7 +332,10 @@ def register_main_callbacks(app):
         if outlier_count > 0:
             info += f" | {outlier_count} outlierů (> TI99)"
         
-        return fig, row_data, info, ti_info
+        # Table statistics
+        table_stats = _calculate_table_stats(df_table)
+        
+        return fig, row_data, info, ti_info, table_stats
 
 
 def _parse_datetime_utc(value, fallback):
@@ -295,19 +350,68 @@ def _parse_datetime_utc(value, fallback):
         return fallback
 
 
-# Color palette for multiple categories
-CATEGORY_COLORS = [
-    "#1f77b4",  # blue
-    "#ff7f0e",  # orange
-    "#2ca02c",  # green
-    "#d62728",  # red
-    "#9467bd",  # purple
-    "#8c564b",  # brown
-    "#e377c2",  # pink
-    "#7f7f7f",  # gray
-    "#bcbd22",  # olive
-    "#17becf",  # cyan
-]
+def _calculate_table_stats(df: pd.DataFrame) -> str:
+    """Calculate aggregated statistics for table data."""
+    if df.empty or "hodnota" not in df.columns:
+        return ""
+    
+    values = df["hodnota"].dropna()
+    if len(values) == 0:
+        return ""
+    
+    n = len(values)
+    mean_val = values.mean()
+    std_val = values.std() if n > 1 else 0
+    min_val = values.min()
+    max_val = values.max()
+    median_val = values.median()
+    
+    # Format numbers nicely
+    def fmt(x):
+        if abs(x) >= 1000:
+            return f"{x:.0f}"
+        elif abs(x) >= 1:
+            return f"{x:.2f}"
+        else:
+            return f"{x:.3g}"
+    
+    stats = f"n={n} | průměr={fmt(mean_val)} | medián={fmt(median_val)} | std={fmt(std_val)} | min={fmt(min_val)} | max={fmt(max_val)}"
+    return stats
+
+
+# =============================================================================
+# Styling constants (from config)
+# =============================================================================
+
+def _get_opacity_normal():
+    return config.scatter.opacity_normal
+
+def _get_opacity_selected():
+    return config.scatter.opacity_selected
+
+def _get_opacity_dimmed():
+    return config.scatter.opacity_dimmed
+
+def _get_marker_size_normal():
+    return config.scatter.marker_size_normal
+
+def _get_marker_size_selected():
+    return config.scatter.marker_size_selected
+
+def _get_marker_size_highlight():
+    return config.scatter.marker_size_highlight
+
+def _get_marker_size_outlier():
+    return config.scatter.marker_size_outlier
+
+def _get_default_color():
+    return config.scatter.default_color
+
+def _get_selection_color():
+    return config.scatter.selection_color
+
+def _get_outlier_color():
+    return config.scatter.outlier_color
 
 
 def _get_color_map(df: pd.DataFrame, color_by: str) -> dict:
@@ -315,7 +419,8 @@ def _get_color_map(df: pd.DataFrame, color_by: str) -> dict:
     if color_by not in df.columns:
         return {}
     categories = df[color_by].dropna().unique()
-    return {cat: CATEGORY_COLORS[i % len(CATEGORY_COLORS)] for i, cat in enumerate(categories)}
+    colors = config.category_colors
+    return {cat: colors[i % len(colors)] for i, cat in enumerate(categories)}
 
 
 def _add_single_trace(fig: go.Figure, df: pd.DataFrame, color_by: str = None):
@@ -328,7 +433,7 @@ def _add_single_trace(fig: go.Figure, df: pd.DataFrame, color_by: str = None):
     
     if not use_legend:
         # Single color mode (no filter active or single category)
-        color = "steelblue"
+        color = _get_default_color()
         _add_category_trace(fig, df, color, None, has_mva, show_legend=False, is_selected=False)
     else:
         # Multiple categories - color by specified column
@@ -341,9 +446,8 @@ def _add_single_trace(fig: go.Figure, df: pd.DataFrame, color_by: str = None):
 
 def _add_category_trace(fig: go.Figure, df: pd.DataFrame, color: str, name: str, has_mva: bool, show_legend: bool, is_selected: bool):
     """Add trace(s) for a single category, with MVA as triangles."""
-    # Larger marker sizes
-    size = 10 if is_selected else 8
-    opacity = 0.9 if is_selected else 0.7
+    size = _get_marker_size_selected() if is_selected else _get_marker_size_normal()
+    opacity = _get_opacity_selected() if is_selected else _get_opacity_normal()
     
     if has_mva:
         df_mva = df[df["pod_mva"] == 1]
@@ -362,6 +466,8 @@ def _add_category_trace(fig: go.Figure, df: pd.DataFrame, color: str, name: str,
                     showlegend=show_legend,
                     name=name or "Data",
                     legendgroup=name,
+                    unselected=dict(marker=dict(opacity=opacity)),  # Keep same opacity when unselected
+                    selected=dict(marker=dict(opacity=opacity)),    # Keep same opacity when selected
                 )
             )
         
@@ -384,6 +490,8 @@ def _add_category_trace(fig: go.Figure, df: pd.DataFrame, color: str, name: str,
                     showlegend=False,  # Don't duplicate legend for MVA
                     name=f"{name} (MVA)" if name else "MVA",
                     legendgroup=name,
+                    unselected=dict(marker=dict(opacity=opacity)),
+                    selected=dict(marker=dict(opacity=opacity)),
                 )
             )
     else:
@@ -397,6 +505,8 @@ def _add_category_trace(fig: go.Figure, df: pd.DataFrame, color: str, name: str,
                 customdata=df[["row_key", "odber_misto"]].values if "odber_misto" in df.columns else df[["row_key"]].values,
                 hovertemplate="<b>%{customdata[0]}</b><br>Lokalita: %{customdata[1]}<br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>" if "odber_misto" in df.columns else "<b>%{customdata[0]}</b><br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>",
                 showlegend=show_legend,
+                unselected=dict(marker=dict(opacity=opacity)),
+                selected=dict(marker=dict(opacity=opacity)),
                 name=name or "Data",
                 legendgroup=name,
             )
@@ -404,8 +514,11 @@ def _add_category_trace(fig: go.Figure, df: pd.DataFrame, color: str, name: str,
 
 
 def _add_split_traces(fig: go.Figure, df: pd.DataFrame, color_by: str = None):
-    """Add separate traces for selected and unselected points, optionally colored by specified column."""
-    df_unselected = df[~df["selected"]]
+    """Add traces with selected points highlighted over the base layer.
+    
+    Strategy: Draw ALL points normally first, then overlay selected points
+    with highlighting. This ensures a fresh-looking graph with selection emphasis.
+    """
     df_selected = df[df["selected"]]
     has_mva = "pod_mva" in df.columns
     
@@ -414,32 +527,52 @@ def _add_split_traces(fig: go.Figure, df: pd.DataFrame, color_by: str = None):
     use_legend = color_by is not None and n_categories > 1
     color_map = _get_color_map(df, color_by) if use_legend else {}
     
-    # Unselected points (dimmed)
-    if not df_unselected.empty:
-        if use_legend:
-            for category, clr in color_map.items():
-                df_cat = df_unselected[df_unselected[color_by] == category]
-                if not df_cat.empty:
-                    _add_unselected_category_trace(fig, df_cat, clr, str(category), has_mva)
-        else:
-            _add_unselected_category_trace(fig, df_unselected, "#888888", None, has_mva)
+    # First: Draw ALL points normally (base layer) - same as _add_single_trace
+    if not use_legend:
+        color = _get_default_color()
+        _add_category_trace(fig, df, color, None, has_mva, show_legend=False, is_selected=False)
+    else:
+        for category, clr in color_map.items():
+            df_cat = df[df[color_by] == category]
+            if not df_cat.empty:
+                _add_category_trace(fig, df_cat, clr, str(category), has_mva, show_legend=True, is_selected=False)
     
-    # Selected points (highlighted)
+    # Second: Overlay selected points with highlight styling
     if not df_selected.empty:
-        if use_legend:
-            for category, clr in color_map.items():
-                df_cat = df_selected[df_selected[color_by] == category]
-                if not df_cat.empty:
-                    _add_category_trace(fig, df_cat, clr, str(category), has_mva, show_legend=True, is_selected=True)
-        else:
-            _add_category_trace(fig, df_selected, "red", None, has_mva, show_legend=False, is_selected=True)
+        _add_selection_highlight(fig, df_selected, has_mva)
 
 
+def _add_selection_highlight(fig: go.Figure, df: pd.DataFrame, has_mva: bool):
+    """Add highlight overlay for selected points - red ring around each point."""
+    selection_color = _get_selection_color()
+    highlight_size = _get_marker_size_highlight()
+    
+    fig.add_trace(
+        go.Scatter(
+            x=df["datum"] if "datum" in df.columns else df.index,
+            y=df["hodnota"],
+            mode="markers",
+            marker=dict(
+                color=selection_color,
+                size=highlight_size,
+                opacity=1.0,
+                symbol="circle-open",
+                line=dict(width=2.5, color=selection_color),
+            ),
+            customdata=df[["row_key"]].values,
+            hovertemplate="<b>VYBRÁNO</b><br>%{customdata[0]}<br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>",
+            showlegend=False,
+            name="Vybrané",
+        )
+    )
+
+
+# Keep _add_unselected_category_trace for potential future use but it's not used now
 def _add_unselected_category_trace(fig: go.Figure, df: pd.DataFrame, color: str, name: str, has_mva: bool):
-    """Add dimmed trace for unselected points."""
+    """Add dimmed trace for unselected points (currently unused)."""
     # Make color lighter/more transparent for unselected
-    dimmed_opacity = 0.4
-    size = 6  # Slightly smaller than selected
+    size = _get_marker_size_normal() - 2  # Slightly smaller than normal
+    opacity_dimmed = _get_opacity_dimmed()
     
     if has_mva:
         df_mva = df[df["pod_mva"] == 1]
@@ -451,7 +584,7 @@ def _add_unselected_category_trace(fig: go.Figure, df: pd.DataFrame, color: str,
                     x=df_normal["datum"] if "datum" in df_normal.columns else df_normal.index,
                     y=df_normal["hodnota"],
                     mode="markers",
-                    marker=dict(color=color, size=size, opacity=dimmed_opacity),
+                    marker=dict(color=color, size=size, opacity=opacity_dimmed),
                     customdata=df_normal[["row_key"]].values,
                     hovertemplate="<b>%{customdata[0]}</b><br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>",
                     showlegend=False,
@@ -466,7 +599,7 @@ def _add_unselected_category_trace(fig: go.Figure, df: pd.DataFrame, color: str,
                     x=df_mva["datum"] if "datum" in df_mva.columns else df_mva.index,
                     y=df_mva["hodnota"],
                     mode="markers",
-                    marker=dict(color=color, size=size, opacity=dimmed_opacity, symbol="circle-open", line=dict(width=1.5, color=color)),
+                    marker=dict(color=color, size=size, opacity=opacity_dimmed, symbol="circle-open", line=dict(width=1.5, color=color)),
                     customdata=df_mva[["row_key"]].values,
                     hovertemplate="<b>MVA</b><br>%{customdata[0]}<br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>",
                     showlegend=False,
@@ -479,7 +612,7 @@ def _add_unselected_category_trace(fig: go.Figure, df: pd.DataFrame, color: str,
                 x=df["datum"] if "datum" in df.columns else df.index,
                 y=df["hodnota"],
                 mode="markers",
-                marker=dict(color=color, size=size, opacity=dimmed_opacity),
+                marker=dict(color=color, size=size, opacity=opacity_dimmed),
                 customdata=df[["row_key"]].values,
                 hovertemplate="<b>%{customdata[0]}</b><br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>",
                 showlegend=False,
@@ -501,8 +634,8 @@ def _build_ref_rectangle(df: pd.DataFrame, start, end) -> list:
             y0=0,
             y1=1,
             yref="paper",
-            fillcolor="rgba(0, 200, 0, 0.1)",  # Light green, semi-transparent
-            line=dict(color="green", width=1, dash="dash"),
+            fillcolor=config.scatter.reference_fill_color,
+            line=dict(width=0),  # No border
             layer="below",  # Draw behind data points
         ),
     ]
@@ -511,14 +644,17 @@ def _build_ref_rectangle(df: pd.DataFrame, start, end) -> list:
 def _add_ti_lines(fig: go.Figure, ti_data: dict):
     """Add horizontal tolerance interval lines."""
     if ti_data['ti90']:
-        fig.add_hline(y=ti_data['ti90'], line_dash="dash", line_color="blue",
-                      line_width=1, annotation_text="TI90", annotation_position="right")
+        fig.add_hline(y=ti_data['ti90'], line_dash="dash", line_color=config.scatter.ti90_color,
+                      line_width=1, annotation_text="TI90", annotation_position="right",
+                      layer="above")
     if ti_data['ti95']:
-        fig.add_hline(y=ti_data['ti95'], line_dash="dash", line_color="orange",
-                      line_width=1, annotation_text="TI95", annotation_position="right")
+        fig.add_hline(y=ti_data['ti95'], line_dash="dash", line_color=config.scatter.ti95_color,
+                      line_width=1, annotation_text="TI95", annotation_position="right",
+                      layer="above")
     if ti_data['ti99']:
-        fig.add_hline(y=ti_data['ti99'], line_dash="dash", line_color="red",
-                      line_width=1, annotation_text="TI99", annotation_position="right")
+        fig.add_hline(y=ti_data['ti99'], line_dash="dash", line_color=config.scatter.ti99_color,
+                      line_width=1, annotation_text="TI99", annotation_position="right",
+                      layer="above")
 
 
 def _add_outlier_markers(fig: go.Figure, df: pd.DataFrame):
@@ -530,14 +666,17 @@ def _add_outlier_markers(fig: go.Figure, df: pd.DataFrame):
     if df_outliers.empty:
         return
     
+    outlier_color = _get_outlier_color()
+    outlier_size = _get_marker_size_outlier()
+    
     fig.add_trace(
         go.Scatter(
             x=df_outliers["datum"] if "datum" in df_outliers.columns else df_outliers.index,
             y=df_outliers["hodnota"],
             mode="markers",
             marker=dict(
-                color="red", size=10, opacity=1.0,
-                symbol="circle-open", line=dict(width=2, color="red"),
+                color=outlier_color, size=outlier_size, opacity=1.0,
+                symbol="circle-open", line=dict(width=2, color=outlier_color),
             ),
             customdata=df_outliers[["row_key"]].values,
             hovertemplate="<b>OUTLIER</b><br>%{customdata[0]}<br>Datum: %{x}<br>Hodnota: %{y}<extra></extra>",

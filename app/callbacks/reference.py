@@ -2,13 +2,32 @@
 from typing import Optional, List
 
 import pandas as pd
-from dash import Input, Output, State
+from dash import Input, Output, State, clientside_callback, ClientsideFunction
 
 from .. import ids
 
 
 def register_reference_callbacks(app):
     """Register reference period control callbacks."""
+    
+    # Clientside callback to update JavaScript date range for slider tooltips
+    clientside_callback(
+        """
+        function(dateRange) {
+            if (dateRange && dateRange.min && dateRange.max) {
+                window.sliderDateRanges = window.sliderDateRanges || {};
+                window.sliderDateRanges.dataRange = {
+                    min: dateRange.min,
+                    max: dateRange.max
+                };
+            }
+            return '';
+        }
+        """,
+        Output(ids.DUMMY_DATE_RANGE_SYNC, "children"),
+        Input(ids.STORE_DATE_RANGE, "data"),
+        prevent_initial_call=True,
+    )
     
     @app.callback(
         Output(ids.STORE_DATE_RANGE, "data"),

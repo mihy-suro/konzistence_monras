@@ -17,7 +17,10 @@ init_cache()
 # Initialize Dash app with Bootstrap theme
 app = dash.Dash(
     __name__,
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    external_stylesheets=[
+        dbc.themes.BOOTSTRAP,
+        dbc.icons.BOOTSTRAP,  # Bootstrap Icons for navbar
+    ],
     title="MRS Viewer",
     update_title="Načítání...",
     suppress_callback_exceptions=True,

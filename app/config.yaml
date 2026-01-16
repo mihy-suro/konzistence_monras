@@ -1,0 +1,187 @@
+# =============================================================================
+# MRS Viewer - Application Configuration
+# =============================================================================
+# Edit this file to customize the application without modifying code.
+# Restart the application after making changes.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Server Settings
+# -----------------------------------------------------------------------------
+server:
+  port: 8050
+  host: "127.0.0.1"
+  debug: true
+
+# -----------------------------------------------------------------------------
+# Database Settings
+# -----------------------------------------------------------------------------
+database:
+  # Path relative to this config file location (app/ directory)
+  path: "../monras_import.sqlite"
+  # Maximum number of rows to load per query (performance limit)
+  max_points: 50000
+
+# -----------------------------------------------------------------------------
+# Layout Dimensions
+# -----------------------------------------------------------------------------
+layout:
+  # Bootstrap grid widths (total = 12)
+  sidebar_width: 2
+  main_area_width: 10
+  left_chart_width: 8    # Scatter plot / Table
+  right_chart_width: 4   # Boxplot / Histogram
+  
+  # Component heights in pixels
+  scatter_height: 420
+  boxplot_height: 420
+  histogram_height: 420
+  table_height: 420
+
+# -----------------------------------------------------------------------------
+# Data Table Settings
+# -----------------------------------------------------------------------------
+table:
+  page_size: 50
+  min_column_width: 100
+
+# -----------------------------------------------------------------------------
+# Histogram Settings
+# -----------------------------------------------------------------------------
+histogram:
+  default_bins: 25
+  min_bins: 5
+  max_bins: 100
+  bin_step: 5
+  # Colors
+  all_data_color: "steelblue"
+  all_data_opacity: 0.5
+  selected_color: "red"
+  selected_opacity: 0.7
+
+# -----------------------------------------------------------------------------
+# Boxplot Settings
+# -----------------------------------------------------------------------------
+boxplot:
+  max_categories: 10
+  summary_color: "steelblue"
+
+# -----------------------------------------------------------------------------
+# Scatter Plot Settings
+# -----------------------------------------------------------------------------
+scatter:
+  # Marker sizes
+  marker_size_normal: 8
+  marker_size_selected: 10
+  marker_size_highlight: 14
+  marker_size_outlier: 12
+  
+  # Opacity values (0.0 - 1.0)
+  opacity_normal: 0.7
+  opacity_selected: 0.9
+  opacity_dimmed: 0.3
+  
+  # Colors
+  default_color: "steelblue"
+  selection_color: "red"
+  outlier_color: "purple"
+  
+  # Reference period rectangle
+  reference_fill_color: "rgba(144, 238, 144, 0.2)"
+  
+  # Tolerance interval line colors
+  ti90_color: "blue"
+  ti95_color: "orange"
+  ti99_color: "red"
+
+# -----------------------------------------------------------------------------
+# Color Palette for Categories
+# -----------------------------------------------------------------------------
+# Used when coloring by odběrové místo or dodavatel
+category_colors:
+  - "#1f77b4"  # blue
+  - "#ff7f0e"  # orange
+  - "#2ca02c"  # green
+  - "#d62728"  # red
+  - "#9467bd"  # purple
+  - "#8c564b"  # brown
+  - "#e377c2"  # pink
+  - "#7f7f7f"  # gray
+  - "#bcbd22"  # olive
+  - "#17becf"  # cyan
+
+# -----------------------------------------------------------------------------
+# Table Prefilters
+# -----------------------------------------------------------------------------
+# Define filters for specific database tables to limit loaded data.
+# Only matching rows will be available in the application.
+# Tables not listed here will load ALL data (no prefilter).
+#
+# Available filter options per table:
+#   nuklidy:      List of nuclide names to include (empty = all)
+#   lokality:     List of location names to include (empty = all)
+#   dodavatele:   List of supplier names to include (empty = all)
+#   exclude_mva:  true/false - exclude rows where pod_mva = 1
+#   min_date:     ISO date string "YYYY-MM-DD" - minimum date
+#   max_date:     ISO date string "YYYY-MM-DD" - maximum date
+#
+# Example with all options:
+#   some_table:
+#     nuklidy: ["Cs 137", "Sr 90"]
+#     lokality: ["Praha", "Brno"]
+#     dodavatele: []              # empty = all suppliers
+#     exclude_mva: true
+#     min_date: "2020-01-01"
+#     max_date: "2025-12-31"
+# -----------------------------------------------------------------------------
+
+table_prefilters:
+  # Example: aerosoly - remove items from lists to filter data
+  aerosoly:
+    nuklidy:
+      - "Be 7"
+      - "Cs 137"
+      - "K 40"
+      - "Na 22"
+      - "Pb 210"
+      - "Pu 238"
+      - "Pu 239"
+      - "Pu 239+240"
+      - "Sr 90"
+      - "SumaB"
+    lokality:
+      - "Brno"
+      - "Brno - Arboretum"
+      - "Cheb - meteostanice "
+      - "Dolní Rožínka"
+      - "Holešov - letiště"
+      - "Hradec Králové - Piletice"
+      - "Kamenná"
+      - "Ostrava - Syllabova"
+      - "Plzeň - Klatovská"
+      - "Praha - Bartoškova"
+      - "Ústí nad Labem - Habrovice"
+      - "České Budějovice - U nemocnice"
+    dodavatele:
+      - "RC Brno"
+      - "RC Hradec Králové"
+      - "RC Kamenná"
+      - "RC Ostrava"
+      - "RC Plzeň"
+      - "RC Praha"
+      - "RC Ústí nad Labem"
+      - "RC České Budějovice"
+      - "SÚJB"
+      - "SÚRO"
+      - "ÚJV Řež"
+    exclude_mva: false
+    # min_date: "2020-01-01"
+    # max_date: "2025-12-31"
+
+# -----------------------------------------------------------------------------
+# Hidden Tables
+# -----------------------------------------------------------------------------
+# Tables listed here will not appear in the dataset dropdown
+hidden_tables: []
+  # - "_metadata"
+  # - "_import_log"

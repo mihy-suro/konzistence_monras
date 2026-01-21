@@ -24,4 +24,5 @@ if __name__ == "__main__":
     print(f"  URL:  http://{host}:{port}/")
     print(f"{'=' * 50}\n")
     
-    app.run(debug=debug, port=port, host=host)
+    # use_reloader=False prevents double initialization in debug mode
+    app.run(debug=debug, port=port, host=host, use_reloader=False)

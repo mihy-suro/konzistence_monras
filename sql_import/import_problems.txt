@@ -1,7 +1,7 @@
 ================================================================================
 REPORT PROBLÉMŮ Z IMPORTU XLSX -> SQLite
-Vygenerováno: 2026-01-15 14:10:10
-Celkem problémů: 543
+Vygenerováno: 2026-01-21 14:09:01
+Celkem problémů: 531
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -58,45 +58,45 @@ Počet problémů: 40
 --------------------------------------------------------------------------------
 
   [DATETIME_ERROR] (40x)
-    - Řádek 506, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 506, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 28.07.0013 22:57
-    - Řádek 507, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 507, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 28.07.0013 22:57
-    - Řádek 508, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 508, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 29.07.0013 22:57
-    - Řádek 509, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 509, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 29.07.0013 22:57
-    - Řádek 510, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 510, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 03.08.0013 22:57
-    - Řádek 511, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 511, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 03.08.0013 22:57
-    - Řádek 512, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 512, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 03.08.0013 22:57
-    - Řádek 536, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 536, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 07.07.0014 22:57
-    - Řádek 539, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 539, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 01.08.0014 22:57
-    - Řádek 540, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 540, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 01.08.0014 22:57
-    - Řádek 506, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 506, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 28.07.0013 23:57
-    - Řádek 507, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 507, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 28.07.0013 23:57
-    - Řádek 508, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 508, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 29.07.0013 23:57
-    - Řádek 509, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 509, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 29.07.0013 23:57
-    - Řádek 510, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 510, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 03.08.0013 23:57
-    - Řádek 511, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 511, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 03.08.0013 23:57
-    - Řádek 512, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 512, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 03.08.0013 23:57
-    - Řádek 536, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 536, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 07.07.0014 23:57
-    - Řádek 539, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 539, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 01.08.0014 23:57
-    - Řádek 540, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 540, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 01.08.0014 23:57
     ... a dalších 20 podobných problémů
 
@@ -252,45 +252,45 @@ Počet problémů: 20
 --------------------------------------------------------------------------------
 
   [DATETIME_ERROR] (20x)
-    - Řádek 376, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 376, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 26.11.0013 22:57
-    - Řádek 377, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 377, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 26.11.0013 22:57
-    - Řádek 378, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 378, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 25.07.0014 22:57
-    - Řádek 379, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 379, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 25.07.0014 22:57
-    - Řádek 387, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 387, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 19.10.0014 22:57
-    - Řádek 394, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 394, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 18.09.0015 22:57
-    - Řádek 403, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 403, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 19.09.0016 22:57
-    - Řádek 426, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 426, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 03.11.0017 22:57
-    - Řádek 433, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 433, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 21.09.0018 22:57
-    - Řádek 434, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 434, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 15.10.0018 22:57
-    - Řádek 376, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 376, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 26.11.0013 23:57
-    - Řádek 377, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 377, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 26.11.0013 23:57
-    - Řádek 378, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 378, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 25.07.0014 23:57
-    - Řádek 379, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 379, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 25.07.0014 23:57
-    - Řádek 387, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 387, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 19.10.0014 23:57
-    - Řádek 394, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 394, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 18.09.0015 23:57
-    - Řádek 403, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 403, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 19.09.0016 23:57
-    - Řádek 426, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 426, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 03.11.0017 23:57
-    - Řádek 433, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 433, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 21.09.0018 23:57
-    - Řádek 434, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 434, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 15.10.0018 23:57
 
 
@@ -921,10 +921,18 @@ Počet problémů: 20
 
 --------------------------------------------------------------------------------
 SOUBOR: Spad 2024.xlsx
-Počet problémů: 20
+Počet problémů: 24
 --------------------------------------------------------------------------------
 
-  [DATETIME_ERROR] (20x)
+  [DATETIME_ERROR] (24x)
+    - Řádek 12809, sloupec 'konec_odberu_mistni_cas': Neplatný formát data/času
+      Hodnota: 30.08.1900 02:00
+    - Řádek 12810, sloupec 'konec_odberu_mistni_cas': Neplatný formát data/času
+      Hodnota: 30.08.1900 02:00
+    - Řádek 12811, sloupec 'konec_odberu_mistni_cas': Neplatný formát data/času
+      Hodnota: 30.08.1900 02:00
+    - Řádek 12812, sloupec 'konec_odberu_mistni_cas': Neplatný formát data/času
+      Hodnota: 30.08.1900 02:00
     - Řádek 4524, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
       Hodnota: 12.03.0021 22:57
     - Řádek 4525, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
@@ -957,62 +965,22 @@ Počet problémů: 20
       Hodnota: 12.03.0021 23:57
     - Řádek 4529, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 12.03.0021 23:57
-    - Řádek 4530, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.03.0021 23:57
-    - Řádek 14605, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 29.04.0012 23:57
-    - Řádek 14606, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 29.04.0012 23:57
-    - Řádek 14607, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 29.04.0012 23:57
+    ... a dalších 4 podobných problémů
 
 
 --------------------------------------------------------------------------------
 SOUBOR: Voda podzemní užitková 2023.xlsx
-Počet problémů: 20
+Počet problémů: 3
 --------------------------------------------------------------------------------
 
-  [DATETIME_ERROR] (20x)
-    - Řádek 6314, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6315, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6316, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6317, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6318, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6319, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6320, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.10.0018 22:57
-    - Řádek 6466, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.03.0019 22:57
-    - Řádek 6467, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.03.0019 22:57
-    - Řádek 6468, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
-      Hodnota: 12.03.0019 22:57
-    - Řádek 6314, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6315, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6316, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6317, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6318, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6319, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6320, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.10.0018 23:57
-    - Řádek 6466, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.03.0019 23:57
-    - Řádek 6467, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.03.0019 23:57
-    - Řádek 6468, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
-      Hodnota: 12.03.0019 23:57
+  [DATETIME_ERROR] (2x)
+    - Řádek 7595, sloupec 'datum_a_cas_mereni_utc': Neplatný formát data/času
+      Hodnota: 04.01.2101 13:06
+    - Řádek 7596, sloupec 'datum_a_cas_mereni_utc': Neplatný formát data/času
+      Hodnota: 04.01.2101 13:06
+
+  [GENERAL_ERROR] (1x)
+    - int() argument must be a string, a bytes-like object or a real number, not 'Timestamp'
 
 
 --------------------------------------------------------------------------------
@@ -1069,51 +1037,51 @@ Počet problémů: 20
 --------------------------------------------------------------------------------
 
   [DATETIME_ERROR] (20x)
-    - Řádek 1653, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1653, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 16.11.0012 22:57
-    - Řádek 1675, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1675, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 02.12.0012 22:57
-    - Řádek 1699, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1699, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 31.12.0012 22:57
-    - Řádek 1727, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1727, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 26.02.0013 22:57
-    - Řádek 1751, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1751, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 28.04.0013 22:57
-    - Řádek 1775, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1775, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 29.05.0013 22:57
-    - Řádek 1787, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1787, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 25.06.0013 22:57
-    - Řádek 1799, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1799, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 28.07.0013 22:57
-    - Řádek 1814, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1814, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 27.08.0013 22:57
-    - Řádek 1826, sloupec 'datum_a_cas_prijmu_utc': Neplatný formát data/času
+    - Řádek 1826, sloupec 'datum_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 24.09.0013 22:57
-    - Řádek 1653, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1653, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 16.11.0012 23:57
-    - Řádek 1675, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1675, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 02.12.0012 23:57
-    - Řádek 1699, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1699, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 31.12.0012 23:57
-    - Řádek 1727, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1727, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 26.02.0013 23:57
-    - Řádek 1751, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1751, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 28.04.0013 23:57
-    - Řádek 1775, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1775, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 29.05.0013 23:57
-    - Řádek 1787, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1787, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 25.06.0013 23:57
-    - Řádek 1799, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1799, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 28.07.0013 23:57
-    - Řádek 1814, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1814, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 27.08.0013 23:57
-    - Řádek 1826, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
+    - Řádek 1826, sloupec 'datum_prijmu_mistni_cas_2': Neplatný formát data/času
       Hodnota: 24.09.0013 23:57
 
 
 --------------------------------------------------------------------------------
 SOUBOR: Zelenina 2023.xlsx
-Počet problémů: 20
+Počet problémů: 21
 --------------------------------------------------------------------------------
 
   [DATETIME_ERROR] (20x)
@@ -1157,6 +1125,9 @@ Počet problémů: 20
       Hodnota: 04.03.0013 23:57
     - Řádek 1255, sloupec 'datum_a_cas_prijmu_mistni_cas': Neplatný formát data/času
       Hodnota: 04.03.0013 23:57
+
+  [GENERAL_ERROR] (1x)
+    - Python int too large to convert to SQLite INTEGER
 
 
 --------------------------------------------------------------------------------
